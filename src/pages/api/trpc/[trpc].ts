@@ -2,19 +2,22 @@
  * This is the API-handler of your app that contains all your API routes.
  * On a bigger app, you will probably want to split this file up into multiple files.
  */
-import * as trpcNext from '@trpc/server/adapters/next';
-import { z } from 'zod';
-import { publicProcedure, router } from '~/server/trpc';
+import * as trpcNext from "@trpc/server/adapters/next";
+import { z } from "zod";
+import { publicProcedure, router } from "~/server/trpc";
 
 const clientRouter = router({
   test: publicProcedure.query(() => {
-    return { hello: 'world' };
+    return { hello: "world" };
   }),
 });
 
 const appRouter = router({
   client: clientRouter,
   // ^^ this name causes problems!!
+
+  anyOtherName: clientRouter,
+  // ^^ this works fine
 
   greeting: publicProcedure
     // This is the input schema of your procedure
@@ -27,7 +30,7 @@ const appRouter = router({
     .query(({ input }) => {
       // This is what you're returning to your client
       return {
-        text: `hello ${input?.name ?? 'world'}`,
+        text: `hello ${input?.name ?? "world"}`,
         // 💡 Tip: Try adding a new property here and see it propagate to the client straight-away
       };
     }),
